@@ -16,11 +16,19 @@ public class LobbyControllerMvcTest {
     MockMvcTester mvc;
 
     @Test
-    void getToCreateGameEndpointReturns200Ok() {
+    void getToCreateGameEndpointReturnsOk() {
         mvc.get()
            .uri("/create-game")
            .assertThat()
            .hasStatus2xxSuccessful();
     }
 
+    @Test
+    void postToCreateGameEndpointReturnsRedirect() {
+        mvc.post()
+           .param("handle", "book-store-80")
+           .uri("/create-game")
+           .assertThat()
+           .hasStatus3xxRedirection();
+    }
 }
