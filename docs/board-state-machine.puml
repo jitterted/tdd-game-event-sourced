@@ -1,0 +1,77 @@
+@startuml
+
+state "What Should It Do?" as what
+state "How Will You Know It Did It?" as how
+state "Write Code For Test" as for_test
+state "Predict Test Will Fail to Compile" as predict_fail_compile
+state "Write Code So Test Compiles" as test_compiles
+state "Predict Test Will Fail" as predict_test_fail
+state "Write Code For Feature" as for_feature
+state "Predict Test Now Passes" as predict_test_passes
+state "Commit Code" as commit_code
+
+[*] -r-> what : Game Started
+
+what -r-> how : Discard Any Action Card
+
+how -r-> for_test : Discard Any Action Card
+
+for_test -r-> predict_fail_compile : Play WRITE CODE card
+
+for_test -d-> for_test: Discard Any Action Card
+
+for_test --> for_feature : Add 3 Cycle Risk
+state predict_fail_compile {
+    state "Wait for Predict" as WaitForPredict2
+    state "Wait for Results" as WaitForTestResults2
+    [*] --> WaitForPredict2
+    WaitForPredict2 --> WaitForPredict2 : Play LESS CODE card
+    WaitForPredict2 --> WaitForTestResults2 : Play PREDICT card
+    WaitForTestResults2 --> WaitForPredict2 : Prediction Fails\n(discard PREDICT card)
+    WaitForTestResults2 --> [*]
+
+}
+
+predict_fail_compile --> for_feature : Add 2 Cycle Risk
+predict_fail_compile --> test_compiles : Prediction Successful\n(discard all in-play cards)
+
+test_compiles --> for_feature : Add 1 Cycle Risk
+test_compiles --> predict_test_fail : Play WRITE CODE card
+
+state predict_test_fail {
+    state "Wait for Predict" as WaitForPredict4
+    state "Wait for Results" as WaitForTestResults4
+    [*] --> WaitForPredict4
+    WaitForPredict4 --> WaitForPredict4 : Play LESS CODE card
+    WaitForPredict4 --> WaitForTestResults4 : Play PREDICT card
+    WaitForTestResults4 --> WaitForPredict4 : Prediction Fails\n(discard PREDICT card)
+    WaitForTestResults4 --> [*]
+
+}
+
+predict_test_fail --> for_feature : Prediction Successful\n(discard all in-play cards)
+
+for_feature -l-> predict_test_passes : Play WRITE CODE card
+
+state predict_test_passes {
+    state "Wait for Predict" as WaitForPredict5
+    state "Wait for Results" as WaitForTestResults5
+    [*] --> WaitForPredict5
+    WaitForPredict5 --> WaitForPredict5 : Play LESS CODE card
+    WaitForPredict5 --> WaitForTestResults5 : Play PREDICT card
+    WaitForTestResults5 --> WaitForPredict5 : Prediction Fails\n(discard PREDICT card)
+    WaitForTestResults5 --> [*]
+}
+    predict_test_passes -u-> commit_code : Prediction Successful\n(discard all in-play cards)
+
+state evaluate_risk <<choice>>
+
+commit_code -u-> what : No Risk\n(discard entire hand)\nAdd 1 to Commit Points
+commit_code -u-> evaluate_risk : Have Risk
+
+evaluate_risk -u-> what : [roll <= RISK]\nREVERT and start over
+evaluate_risk -u-> what : [roll > RISK]\nAdd 1 to Commit Points
+
+
+
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+
+state "Game Created - Players Joining" as GamePlayersJoining
+state "Game In Progress" as GameInProgress
+
+[*] --> GamePlayersJoining : Host Creates Game
+
+state GamePlayersJoining {
+
+GamePlayersJoining --> GameReadyToStartAcceptingPlayers : Player Joins Game (evt)
+
+GameReadyToStartAcceptingPlayers --> GameInProgress : Player Starts Game
+
+state gameFull <<choice>>
+
+GameReadyToStartAcceptingPlayers --> gameFull: Player Joins Game (evt)
+gameFull --> GameReadyToStartAcceptingPlayers : [playerCount < 4]
+gameFull --> GameFullReadyToStart : [playerCount = 4]
+
+GameFullReadyToStart --> GameInProgress : Player Starts Game
+
+}
+
+GameInProgress --> GameInProgress : (See Board State Machine)
+
+GameInProgress --> GameOver : Player Ends Game
+
+
+@enduml
