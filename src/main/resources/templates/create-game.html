@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Create New Game</title>
 </head>
 <body>
 <h1>Create a Game</h1>
-<form method="POST" action="/create-game">
-  <label for="title">Game Title</label>
-  <input type="text" id="title" name="title">
+<form method="POST" th:action="@{/create-game}" action="#" th:object="${createGameForm}">
+    <label th:for="*{title}">Game Title</label>
+    <input type="text" th:field="*{title}">
 
+    <input hidden="hidden" th:field="*{gameHandle}" type="text"/>
+
+    <button type="submit">Create Game</button>
 </form>
 </body>
 </html>

@@ -41,7 +41,7 @@ public class LobbyController {
 
     @PostMapping("/create-game")
     public String createGameCommand(CreateGameForm createGameForm) {
-        createGameCommand.execute("UNKNOWN CREATOR", createGameForm.handle(), createGameForm.title());
+        createGameCommand.execute("UNKNOWN CREATOR", createGameForm.gameHandle(), createGameForm.title());
         return "redirect:/join-game";
     }
 
