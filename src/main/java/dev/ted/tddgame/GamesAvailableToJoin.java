@@ -11,6 +11,10 @@ public class GamesAvailableToJoin {
         gameTitles.add(titleOfGame);
     }
 
+    public List<String> gameTitles() {
+        return List.copyOf(gameTitles);
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", GamesAvailableToJoin.class.getSimpleName() + "[", "]")

@@ -6,7 +6,7 @@ public class CreateGameCommand {
 
     private final EventStore eventStore;
 
-    private CreateGameCommand(EventStore eventStore) {
+    public CreateGameCommand(EventStore eventStore) {
         this.eventStore = eventStore;
     }
 

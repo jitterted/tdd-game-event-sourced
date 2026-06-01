@@ -32,10 +32,10 @@ class LobbyTest {
         @Test
         void gameCreated_AddsGame_GamesAvailableToJoin() {
             GamesAvailableToJoinProjector projector = new GamesAvailableToJoinProjector();
-            Event gameCreated = new GameCreated(
+            GameCreated gameCreated = new GameCreated(
                     1L, "Title of Game", "game-handle", "Creator");
 
-            projector.apply(Stream.of(gameCreated));
+            projector.apply(gameCreated);
 
             GamesAvailableToJoin expected = new GamesAvailableToJoin();
             expected.add("Title of Game");

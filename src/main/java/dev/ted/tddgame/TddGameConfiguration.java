@@ -14,7 +14,19 @@ public class TddGameConfiguration {
     }
 
     @Bean
-    CreateGameCommand supplyCreateGameCommand() {
-        return CreateGameCommand.createForTest();
+    CreateGameCommand supplyCreateGameCommand(EventStore eventStore) {
+        return new CreateGameCommand(eventStore);
+    }
+
+    @Bean
+    EventStore eventStore() {
+        return new InMemoryEventStore();
+    }
+
+    @Bean
+    GamesAvailableToJoinProjector gamesAvailableToJoinProjector(EventStore eventStore) {
+        GamesAvailableToJoinProjector projector = new GamesAvailableToJoinProjector();
+        eventStore.subscribe(projector);
+        return projector;
     }
 }
