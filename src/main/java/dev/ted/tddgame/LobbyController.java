@@ -23,7 +23,7 @@ public class LobbyController {
     static @NonNull LobbyController createForTest(String gameHandle) {
         HumanReadableIdGenerator singletonGenerator = () -> gameHandle;
         return new LobbyController(singletonGenerator,
-                                   new CreateGameCommand());
+                                   CreateGameCommand.createForTest());
     }
 
     static @NonNull LobbyController createForTest(CreateGameCommand createGameCommand) {

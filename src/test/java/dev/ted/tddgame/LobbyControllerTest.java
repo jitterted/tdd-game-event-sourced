@@ -28,7 +28,7 @@ class LobbyControllerTest {
 
     @Test
     void createGameRedirectsToJoinGamePage() {
-        CreateGameCommand createGameCommand = new CreateGameCommand();
+        CreateGameCommand createGameCommand = CreateGameCommand.createForTest();
         LobbyController lobbyController = LobbyController.createForTest(createGameCommand);
 
         String redirectUrl = lobbyController.createGameCommand(

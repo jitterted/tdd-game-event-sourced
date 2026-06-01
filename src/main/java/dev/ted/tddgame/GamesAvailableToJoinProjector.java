@@ -11,7 +11,6 @@ public class GamesAvailableToJoinProjector {
                 gamesAvailableToJoin.add(gameCreated.title());
             }
         });
-
     }
 
     public GamesAvailableToJoin projection() {

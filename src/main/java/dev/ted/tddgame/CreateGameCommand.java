@@ -1,18 +1,26 @@
 package dev.ted.tddgame;
 
-import java.util.Collections;
 import java.util.List;
 
 public class CreateGameCommand {
 
-    private List<Event> events = Collections.emptyList();
+    private final EventStore eventStore;
+
+    private CreateGameCommand(EventStore eventStore) {
+        this.eventStore = eventStore;
+    }
+
+    public static CreateGameCommand createForTest() {
+        return new CreateGameCommand(new InMemoryEventStore());
+    }
 
     public List<Event> execute(String creator, String gameHandle, String titleOfGame) {
-        events = List.of(new GameCreated(null, titleOfGame, gameHandle, creator));
-        return events;
+        GameCreated event = new GameCreated(null, titleOfGame, gameHandle, creator);
+        eventStore.append(event);
+        return List.of(event);
     }
 
     public List<Event> executionEvents() {
-        return List.copyOf(events);
+        return eventStore.loadEvents();
     }
 }

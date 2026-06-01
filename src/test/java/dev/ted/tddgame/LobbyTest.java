@@ -15,7 +15,7 @@ class LobbyTest {
 
         @Test
         void createGame_GameCreated() {
-            CreateGameCommand command = new CreateGameCommand();
+            CreateGameCommand command = CreateGameCommand.createForTest();
 
             List<Event> events = command.execute(
                     "Creator", "game-handle", "Title of Game");

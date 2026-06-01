@@ -15,6 +15,6 @@ public class TddGameConfiguration {
 
     @Bean
     CreateGameCommand supplyCreateGameCommand() {
-        return new CreateGameCommand();
+        return CreateGameCommand.createForTest();
     }
 }
