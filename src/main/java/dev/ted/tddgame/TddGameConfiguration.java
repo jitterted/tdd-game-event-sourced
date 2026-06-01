@@ -13,4 +13,8 @@ public class TddGameConfiguration {
         return new PermutationBasedHumanReadableIdGenerator();
     }
 
+    @Bean
+    CreateGameCommand supplyCreateGameCommand() {
+        return new CreateGameCommand();
+    }
 }
