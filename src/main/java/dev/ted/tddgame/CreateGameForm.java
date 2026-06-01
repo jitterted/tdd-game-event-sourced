@@ -1,4 +1,4 @@
 package dev.ted.tddgame;
 
-public record CreateGameForm(String handle) {
+public record CreateGameForm(String handle, String title) {
 }
