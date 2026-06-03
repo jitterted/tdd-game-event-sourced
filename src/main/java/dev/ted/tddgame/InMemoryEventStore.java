@@ -8,11 +8,20 @@ public class InMemoryEventStore implements EventStore {
     private final List<EventConsumer> subscribers = new ArrayList<>();
 
     @Override
-    public void append(Event event) {
+    public Event append(Event event) {
         events.add(event);
+        long nextEventSequence = events.size();
+
+        GameCreated gameCreated = (GameCreated) event;
+        GameCreated eventWithSequence = new GameCreated(
+                nextEventSequence, gameCreated.title(),
+                gameCreated.gameHandle(), gameCreated.creator());
+
         subscribers.forEach(
-                subscriber -> subscriber.apply(event)
+                subscriber -> subscriber.apply(eventWithSequence)
         );
+
+        return eventWithSequence;
     }
 
     @Override

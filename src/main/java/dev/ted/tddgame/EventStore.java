@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface EventStore {
 
-    void append(Event event);
+    Event append(Event event);
 
     List<Event> loadEvents();
 
