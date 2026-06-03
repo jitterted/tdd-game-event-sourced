@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 @Tag("mvc")
 @WebMvcTest(LobbyController.class)
 @Import(TddGameConfiguration.class)
@@ -27,7 +29,7 @@ public class LobbyControllerMvcTest {
     }
 
     @Test
-    void getToCreateGameEndpointReturnsOk() {
+    void getToLobbyEndpointReturnsOkWithLobbyViewName() {
         mvc.get()
            .uri("/lobby")
            .assertThat()
@@ -35,13 +37,14 @@ public class LobbyControllerMvcTest {
            .hasViewName("lobby");
     }
 
-//    @Test
-//    void postToCreateGameEndpointReturnsRedirect() {
-//        mvc.post()
-//           .param("gameHandle", "book-store-80")
-//           .with(csrf())
-//           .uri("/create-game")
-//           .assertThat()
-//           .hasStatus3xxRedirection();
-//    }
+    @Test
+    void postToJoinEndpointReturnsRedirectToGameWithHandle() {
+        mvc.post()
+           .param("gameHandle", "book-store-80")
+           .with(csrf())
+           .uri("/join")
+           .assertThat()
+           .hasStatus3xxRedirection()
+           .hasRedirectedUrl("/game"); // game handle is a Query param?
+    }
 }

@@ -1,7 +1,6 @@
 Next up:
 ========
 
-[ ] JoinGameController populates template with available games
 [ ] Will need username for player joined event
 
 
@@ -12,3 +11,4 @@ Completed:
 [X] Add security principal username to the GameCreated event
 [X] EventStore impl has to assign event sequence numbers to events
 [X] Add game handle to projector for Slice #2 UI
+[X] JoinGameController populates template with available games

@@ -10,7 +10,9 @@
 <form method="POST" th:action="@{/join}" action="#">
     <div th:each="availableGame : ${availableGames}">
         <span style="font-size: x-large" th:text="${availableGame.title}">Title of Game goes here</span>
-        <button style="padding: 0 0.5rem;margin-inline-start: 0.5rem" th:value="${availableGame.gameHandle}" type="submit">Join This Game</button>
+        <button style="padding: 0 0.5rem;margin-inline-start: 0.5rem"
+                name="gameHandle"
+                th:value="${availableGame.gameHandle}" type="submit">Join This Game</button>
     </div>
 </form>
 </body>
