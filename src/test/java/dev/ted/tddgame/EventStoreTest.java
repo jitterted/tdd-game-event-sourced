@@ -1,6 +1,5 @@
 package dev.ted.tddgame;
 
-import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ class EventStoreTest {
     void eventAssignedEventSequenceStartingWith1WhenAppendedAndReturned() {
         EventStore eventStore = new InMemoryEventStore();
 
-        Event eventWithSequence = eventStore.append(createEvent());
+        Event eventWithSequence = eventStore.append(EventFactory.createEvent());
 
         assertThat(eventWithSequence.eventSequence())
                 .isEqualTo(1L);
@@ -23,8 +22,8 @@ class EventStoreTest {
     @Test
     void twoEventsAppendedGetSequenceNumbersInOrderOfAppending() {
         EventStore eventStore = new InMemoryEventStore();
-        Event firstEvent = createEventWithTitle("first");
-        Event secondEvent = createEventWithTitle("second");
+        Event firstEvent = EventFactory.createEventWithTitle("first");
+        Event secondEvent = EventFactory.createEventWithTitle("second");
         List<GameCreated> eventsWithSequence = new ArrayList<>();
 
         eventsWithSequence.add((GameCreated) eventStore.append(firstEvent));
@@ -42,7 +41,7 @@ class EventStoreTest {
         AppliedEventsConsumer subscriber = new AppliedEventsConsumer();
         eventStore.subscribe(subscriber);
 
-        eventStore.append(createEvent());
+        eventStore.append(EventFactory.createEvent());
 
         assertThat(subscriber.eventsApplied())
                 .hasSize(1)
@@ -51,13 +50,6 @@ class EventStoreTest {
                 .isNotNull();
     }
 
-    private static @NonNull GameCreated createEvent() {
-        return createEventWithTitle("title");
-    }
-
-    private static @NonNull GameCreated createEventWithTitle(String title) {
-        return new GameCreated(null, "gameHandle", title, "creator");
-    }
 }
 
 class AppliedEventsConsumer implements EventConsumer {

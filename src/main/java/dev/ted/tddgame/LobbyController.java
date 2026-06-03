@@ -1,52 +1,28 @@
 package dev.ted.tddgame;
 
-import com.github.kkuegler.HumanReadableIdGenerator;
-import com.github.kkuegler.PermutationBasedHumanReadableIdGenerator;
-import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
 
 @Controller
 public class LobbyController {
 
-    private final HumanReadableIdGenerator idGenerator;
-    private final CreateGameCommand createGameCommand;
+    private final GamesAvailableToJoinProjector gamesAvailableToJoinProjector;
 
-    public LobbyController(HumanReadableIdGenerator idGenerator,
-                           CreateGameCommand createGameCommand) {
-        this.idGenerator = idGenerator;
-        this.createGameCommand = createGameCommand;
+    public LobbyController(GamesAvailableToJoinProjector gamesAvailableToJoinProjector) {
+        this.gamesAvailableToJoinProjector = gamesAvailableToJoinProjector;
     }
 
-    static @NonNull LobbyController createForTest(String gameHandle) {
-        HumanReadableIdGenerator singletonGenerator = () -> gameHandle;
-        return new LobbyController(singletonGenerator,
-                                   CreateGameCommand.createForTest());
+    @GetMapping("/")
+    public String redirectToLobby() {
+        return "redirect:/lobby";
     }
 
-    static @NonNull LobbyController createForTest(CreateGameCommand createGameCommand) {
-        return new LobbyController(
-                new PermutationBasedHumanReadableIdGenerator(),
-                createGameCommand);
+    @GetMapping("/lobby")
+    public String showLobby(Principal principal, Model model) {
+        model.addAttribute("availableGames", gamesAvailableToJoinProjector.projection().games());
+        return "lobby";
     }
-
-    @GetMapping("/create-game")
-    public String showCreateGameForm(Model model) {
-        model.addAttribute("createGameForm",
-                           new CreateGameForm(idGenerator.generate(), ""));
-        return "create-game";
-    }
-
-    @PostMapping("/create-game")
-    public String createGameCommand(Principal principal, CreateGameForm createGameForm) {
-        createGameCommand.execute(principal.getName(),
-                                  createGameForm.gameHandle(),
-                                  createGameForm.title());
-        return "redirect:/join-game";
-    }
-
 }

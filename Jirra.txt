@@ -1,6 +1,7 @@
 Next up:
 ========
 
+[ ] JoinGameController populates template with available games
 [ ] Will need username for player joined event
 
 

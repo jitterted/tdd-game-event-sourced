@@ -1,5 +1,6 @@
 package dev.ted.tddgame;
 
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
@@ -10,44 +11,20 @@ import static org.assertj.core.api.Assertions.*;
 
 class LobbyControllerTest {
 
+    private static final Principal DUMMY_PRINCIPAL = () -> "dummy username";
+
     @Test
-    void showCreateGameFormPrepopulatedWithGameHandleAndEmptyTitle() {
-        String gameHandle = "leaf-blower-20";
-        LobbyController lobbyController = LobbyController.createForTest(gameHandle);
+    void showLobbyPopulatesModelWithAvailableGames() {
+        GamesAvailableToJoinProjector projector = new GamesAvailableToJoinProjector();
+        projector.apply(EventFactory.createEventWithTitle("First Game Title"));
+        LobbyController lobbyController = new LobbyController(projector);
 
         Model model = new ConcurrentModel();
-        String viewName = lobbyController.showCreateGameForm(model);
+        lobbyController.showLobby(DUMMY_PRINCIPAL, model);
 
-        assertThat(viewName)
-                .isEqualTo("create-game");
-
-        CreateGameForm createGameForm = (CreateGameForm)
-                model.getAttribute("createGameForm");
-        String emptyTitle = "";
-        assertThat(createGameForm)
-                .isEqualTo(new CreateGameForm(gameHandle, emptyTitle));
+        assertThat(model.asMap())
+                .extractingByKey("availableGames", InstanceOfAssertFactories.list(GamesAvailableToJoin.AvailableGame.class))
+                .extracting(GamesAvailableToJoin.AvailableGame::title)
+                .containsExactly("First Game Title");
     }
-
-    @Test
-    void createGameCommandExecutesCommandAndRedirectsToJoinGamePage() {
-        CreateGameCommand createGameCommand = CreateGameCommand.createForTest();
-        LobbyController lobbyController = LobbyController.createForTest(createGameCommand);
-
-        CreateGameForm createGameForm = new CreateGameForm("funny-ant-60", "The Olive Game 🫒");
-        Principal principal = () -> "principal_name"; // Principal.getName() = authName
-        String redirectUrl = lobbyController.createGameCommand(
-                principal, createGameForm);
-
-        assertThat(redirectUrl)
-                .isEqualTo("redirect:/join-game");
-
-        assertThat(createGameCommand.executionEvents())
-                .as("Expected execution of CreateGameCommand to generate a GameCreated event")
-                .containsExactly(
-                        new GameCreated(
-                                null,
-                                "funny-ant-60", "The Olive Game 🫒",
-                                "principal_name"));
-    }
-
 }

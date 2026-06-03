@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Player Lobby</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+</head>
+<body>
+<h1>Which Game Would You Like to Join?</h1>
+<form method="POST" th:action="@{/join}" action="#">
+    <div th:each="availableGame : ${availableGames}">
+        <span style="font-size: x-large" th:text="${availableGame.title}">Title of Game goes here</span>
+        <button style="padding: 0 0.5rem;margin-inline-start: 0.5rem" th:value="${availableGame.gameHandle}" type="submit">Join This Game</button>
+    </div>
+</form>
+</body>
+</html>

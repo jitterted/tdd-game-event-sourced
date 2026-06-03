@@ -8,7 +8,9 @@
 <h1>Create a Game</h1>
 <form method="POST" th:action="@{/create-game}" action="#" th:object="${createGameForm}">
     <label th:for="*{title}">Game Title</label>
-    <input type="text" th:field="*{title}">
+    <label>
+        <input type="text" th:field="*{title}">
+    </label>
 
     <input hidden="hidden" th:field="*{gameHandle}" type="text"/>
 
