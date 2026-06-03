@@ -5,20 +5,20 @@ import java.util.List;
 import java.util.StringJoiner;
 
 public class GamesAvailableToJoin {
-    private final List<String> gameTitles = new ArrayList<>();
+    private final List<AvailableGame> availableGames = new ArrayList<>();
 
-    public void add(String titleOfGame) {
-        gameTitles.add(titleOfGame);
+    public void add(AvailableGame availableGame) {
+        availableGames.add(availableGame);
     }
 
-    public List<String> gameTitles() {
-        return List.copyOf(gameTitles);
+    public List<AvailableGame> games() {
+        return List.copyOf(availableGames);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", GamesAvailableToJoin.class.getSimpleName() + "[", "]")
-                .add("gameTitles=" + gameTitles)
+                .add("gameTitles=" + availableGames)
                 .toString();
     }
 
@@ -29,11 +29,14 @@ public class GamesAvailableToJoin {
         }
 
         GamesAvailableToJoin that = (GamesAvailableToJoin) o;
-        return gameTitles.equals(that.gameTitles);
+        return availableGames.equals(that.availableGames);
     }
 
     @Override
     public int hashCode() {
-        return gameTitles.hashCode();
+        return availableGames.hashCode();
     }
+
+    public record AvailableGame(String gameHandle, String title) {}
+
 }

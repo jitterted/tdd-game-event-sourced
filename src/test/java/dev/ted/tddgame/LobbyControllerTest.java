@@ -46,8 +46,7 @@ class LobbyControllerTest {
                 .containsExactly(
                         new GameCreated(
                                 null,
-                                "The Olive Game 🫒",
-                                "funny-ant-60",
+                                "funny-ant-60", "The Olive Game 🫒",
                                 "principal_name"));
     }
 

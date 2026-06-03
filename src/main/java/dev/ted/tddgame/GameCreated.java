@@ -2,8 +2,7 @@ package dev.ted.tddgame;
 
 public record GameCreated(
         Long eventSequence,
-        String title,
-        String gameHandle,
+        String gameHandle, String title,
         String creator
 ) implements Event {
 }

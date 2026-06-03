@@ -14,8 +14,8 @@ public class InMemoryEventStore implements EventStore {
 
         GameCreated gameCreated = (GameCreated) event;
         GameCreated eventWithSequence = new GameCreated(
-                nextEventSequence, gameCreated.title(),
-                gameCreated.gameHandle(), gameCreated.creator());
+                nextEventSequence, gameCreated.gameHandle(), gameCreated.title(),
+                gameCreated.creator());
 
         subscribers.forEach(
                 subscriber -> subscriber.apply(eventWithSequence)

@@ -10,7 +10,9 @@ public class GamesAvailableToJoinProjector implements EventConsumer {
     @Override
     public void apply(Event event) {
         if (event instanceof GameCreated gameCreated) {
-            gamesAvailableToJoin.add(gameCreated.title());
+            gamesAvailableToJoin.add(new GamesAvailableToJoin
+                    .AvailableGame(gameCreated.gameHandle(),
+                                   gameCreated.title()));
         }
     }
 }

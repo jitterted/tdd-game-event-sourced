@@ -1,7 +1,6 @@
 Next up:
 ========
 
-[ ] Add game handle to projector for Slice #2 UI
 [ ] Will need username for player joined event
 
 
@@ -11,3 +10,4 @@ Completed:
 
 [X] Add security principal username to the GameCreated event
 [X] EventStore impl has to assign event sequence numbers to events
+[X] Add game handle to projector for Slice #2 UI

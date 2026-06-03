@@ -12,9 +12,12 @@ class GamesAvailableToJoinProjectorTest {
         GamesAvailableToJoinProjector projector = new GamesAvailableToJoinProjector();
         eventStore.subscribe(projector);
 
-        eventStore.append(new GameCreated(null, "title of game", "gameHandle", "creator"));
+        eventStore.append(new GameCreated(null, "tdd-game-90", "title of game", "creator"));
 
-        assertThat(projector.projection().gameTitles())
-                .containsExactly("title of game");
+        assertThat(projector.projection().games())
+                .containsExactly(
+                        new GamesAvailableToJoin.AvailableGame(
+                                "tdd-game-90",
+                                "title of game"));
     }
 }

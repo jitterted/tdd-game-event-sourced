@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -22,7 +21,7 @@ class LobbyTest {
 
             assertThat(events)
                     .containsExactly(new GameCreated(
-                            null, "Title of Game", "game-handle", "Creator"));
+                            null, "game-handle", "Title of Game", "Creator"));
         }
     }
 
@@ -33,12 +32,14 @@ class LobbyTest {
         void gameCreated_AddsGame_GamesAvailableToJoin() {
             GamesAvailableToJoinProjector projector = new GamesAvailableToJoinProjector();
             GameCreated gameCreated = new GameCreated(
-                    1L, "Title of Game", "game-handle", "Creator");
+                    1L, "sun-dog-20", "Title of Game", "Creator");
 
             projector.apply(gameCreated);
 
             GamesAvailableToJoin expected = new GamesAvailableToJoin();
-            expected.add("Title of Game");
+            expected.add(new GamesAvailableToJoin.AvailableGame(
+                    "sun-dog-20",
+                    "Title of Game"));
             assertThat(projector.projection())
                     .isEqualTo(expected);
         }

@@ -56,7 +56,7 @@ class EventStoreTest {
     }
 
     private static @NonNull GameCreated createEventWithTitle(String title) {
-        return new GameCreated(null, title, "gameHandle", "creator");
+        return new GameCreated(null, "gameHandle", title, "creator");
     }
 }
 

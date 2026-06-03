@@ -15,7 +15,7 @@ public class CreateGameCommand {
     }
 
     public List<Event> execute(String creator, String gameHandle, String titleOfGame) {
-        GameCreated event = new GameCreated(null, titleOfGame, gameHandle, creator);
+        GameCreated event = new GameCreated(null, gameHandle, titleOfGame, creator);
         eventStore.append(event);
         return List.of(event);
     }

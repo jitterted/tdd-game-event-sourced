@@ -34,14 +34,15 @@ public class LobbyControllerMvcTest {
     @Test
     void postToCreateGameEndpointReturnsRedirect() {
         mvc.post()
-           .param("handle", "book-store-80") // this will fail when we validate the handle (this should be "gameHandle")
+           .param("gameHandle", "book-store-80")
            .param("title", "Posted Title")
            .with(csrf())
            .uri("/create-game")
            .assertThat()
            .hasStatus3xxRedirection();
 
-        assertThat(gamesAvailableToJoinProjector.projection().gameTitles())
-                .containsExactly("Posted Title");
+        assertThat(gamesAvailableToJoinProjector.projection().games())
+                .containsExactly(new GamesAvailableToJoin
+                        .AvailableGame("book-store-80", "Posted Title"));
     }
 }
