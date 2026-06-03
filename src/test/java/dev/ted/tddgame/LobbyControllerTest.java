@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
+import java.security.Principal;
+
 import static org.assertj.core.api.Assertions.*;
 
 class LobbyControllerTest {
@@ -27,12 +29,14 @@ class LobbyControllerTest {
     }
 
     @Test
-    void createGameRedirectsToJoinGamePage() {
+    void createGameCommandExecutesCommandAndRedirectsToJoinGamePage() {
         CreateGameCommand createGameCommand = CreateGameCommand.createForTest();
         LobbyController lobbyController = LobbyController.createForTest(createGameCommand);
 
+        CreateGameForm createGameForm = new CreateGameForm("funny-ant-60", "The Olive Game 🫒");
+        Principal principal = () -> "principal_name"; // Principal.getName() = authName
         String redirectUrl = lobbyController.createGameCommand(
-                new CreateGameForm("funny-ant-60", "The Olive Game 🫒"));
+                principal, createGameForm);
 
         assertThat(redirectUrl)
                 .isEqualTo("redirect:/join-game");
@@ -44,7 +48,7 @@ class LobbyControllerTest {
                                 null,
                                 "The Olive Game 🫒",
                                 "funny-ant-60",
-                                "UNKNOWN CREATOR"));
+                                "principal_name"));
     }
 
 }

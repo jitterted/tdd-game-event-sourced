@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
+
 @Controller
 public class LobbyController {
 
@@ -40,8 +42,10 @@ public class LobbyController {
     }
 
     @PostMapping("/create-game")
-    public String createGameCommand(CreateGameForm createGameForm) {
-        createGameCommand.execute("UNKNOWN CREATOR", createGameForm.gameHandle(), createGameForm.title());
+    public String createGameCommand(Principal principal, CreateGameForm createGameForm) {
+        createGameCommand.execute(principal.getName(),
+                                  createGameForm.gameHandle(),
+                                  createGameForm.title());
         return "redirect:/join-game";
     }
 
