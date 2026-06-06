@@ -1,7 +1,9 @@
 Next up:
 ========
 
-[ ] Will need username for player joined event
+[ ] Create JoinGame command executed from the LobbyController.joinGame
+[ ] Will need a member ID mapped from Principal.name for player joined event
+[ ] Redirect from joinGame to /game needs to have a game handle query param
 
 
 
