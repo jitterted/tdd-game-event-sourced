@@ -14,10 +14,10 @@ public class CreateGameCommand {
         return new CreateGameCommand(new InMemoryEventStore());
     }
 
-    public List<Event> execute(String creator, String gameHandle, String titleOfGame) {
-        GameCreated event = new GameCreated(null, gameHandle, titleOfGame, creator);
+    public Result<Event, String> execute(String creator, String gameHandle, String titleOfGame) {
+        Event event = new GameCreated(null, gameHandle, titleOfGame, creator);
         eventStore.append(event);
-        return List.of(event);
+        return Result.success(event);
     }
 
     public List<Event> executionEvents() {

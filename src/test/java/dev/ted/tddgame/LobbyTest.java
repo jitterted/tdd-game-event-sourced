@@ -3,8 +3,6 @@ package dev.ted.tddgame;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.*;
 
 class LobbyTest {
@@ -16,11 +14,14 @@ class LobbyTest {
         void createGame_GameCreated() {
             CreateGameCommand command = CreateGameCommand.createForTest();
 
-            List<Event> events = command.execute(
+            Result<Event, String> event = command.execute(
                     "Creator", "game-handle", "Title of Game");
 
-            assertThat(events)
-                    .containsExactly(new GameCreated(
+            assertThat(event.isSuccess())
+                    .as("executing CreateGameCommand should have Successful Result, but did not")
+                    .isTrue();
+            assertThat(event.value())
+                    .isEqualTo(new GameCreated(
                             null, "game-handle", "Title of Game", "Creator"));
         }
     }
