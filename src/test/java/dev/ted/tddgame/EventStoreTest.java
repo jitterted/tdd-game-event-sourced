@@ -70,7 +70,16 @@ class EventStoreTest {
 
     @Test
     void queryReturnsAllEventsMatchingMultipleEventTypes() {
+        EventStore eventStore = new InMemoryEventStore();
+        eventStore.append(EventFactory.gameCreatedWithTitle("first"));
+        eventStore.append(EventFactory.gameCreatedWithTitle("second"));
+        eventStore.append(EventFactory.memberRegistered("blue"));
 
+        List<StoredEvent> events = eventStore.query(
+                new QueryPredicate(GameCreated.class));
+
+        assertThat(events)
+                .hasSize(2);
     }
 
     @Test

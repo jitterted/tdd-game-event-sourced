@@ -9,14 +9,14 @@ class ResultTest {
     @Test
     void successIsSuccessful() {
         Result<Event, String> successfulEvent = Result.success(
-                new GameCreated(1L, "irrelevant", "irrelevant", "irrelevant"));
+                new GameCreated("irrelevant", "irrelevant", "irrelevant"));
 
         assertThat(successfulEvent.isSuccess())
                 .isTrue();
         assertThat(successfulEvent.isFailure())
                 .isFalse();
         assertThat(successfulEvent.value())
-                .isEqualTo(new GameCreated(1L, "irrelevant", "irrelevant", "irrelevant"));
+                .isEqualTo(new GameCreated("irrelevant", "irrelevant", "irrelevant"));
         assertThat(successfulEvent.failureInfo())
                 .isNull();
     }

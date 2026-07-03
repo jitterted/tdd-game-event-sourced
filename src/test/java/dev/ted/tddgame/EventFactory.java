@@ -13,7 +13,7 @@ public class EventFactory {
     }
 
     public static GameCreated gameCreatedWithTitle(String title) {
-        return new GameCreated(null, "gameHandle", title, "creator");
+        return new GameCreated("gameHandle", title, "creator");
     }
 
     public static @NonNull StoredEvent toStoredEvent(Event event) {

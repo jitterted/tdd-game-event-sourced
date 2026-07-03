@@ -42,7 +42,6 @@ class CreateGameControllerTest {
                 .extracting(StoredEvent::payload)
                 .containsExactly(
                         new GameCreated(
-                                null,
                                 "funny-ant-60", "The Olive Game 🫒",
                                 "principal_name"));
     }
