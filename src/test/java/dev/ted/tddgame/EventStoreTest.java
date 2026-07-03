@@ -1,6 +1,5 @@
 package dev.ted.tddgame;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -81,7 +80,8 @@ class EventStoreTest {
         eventStore.append(EventFactory.memberRegistered("blue"));
 
         List<StoredEvent> events = eventStore.query(
-                new QueryPredicate(Set.of(GameCreated.class, PlayerJoined.class)));
+                new QueryPredicate(Set.of(GameCreated.class,
+                                          PlayerJoined.class)));
 
         assertThat(events)
                 .hasSize(3)
@@ -90,11 +90,12 @@ class EventStoreTest {
     }
 
     @Test
-    @Disabled("until query for just matching event type works")
     void queryReturnsEventsMatchingSingleEventTypeAndSpecificTag() {
         EventStore eventStore = new InMemoryEventStore();
+        eventStore.append(EventFactory.gameCreatedWithTitle("first"));
         eventStore.append(EventFactory.memberRegistered("my_username"));
-        MemberRegistered blueMemberRegistered = EventFactory.memberRegistered("blue");
+        MemberRegistered blueMemberRegistered =
+                EventFactory.memberRegistered("blue");
         eventStore.append(blueMemberRegistered);
 
         QueryPredicate memberQueryPredicate =
@@ -105,6 +106,11 @@ class EventStoreTest {
         assertThat(events)
                 .extracting(StoredEvent::payload)
                 .containsExactly(blueMemberRegistered);
+    }
+
+    @Test
+    void eventsMatchingMultipleTypesAndSpecificTag() {
+
     }
 }
 

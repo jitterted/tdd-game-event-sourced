@@ -5,6 +5,6 @@ import java.util.UUID;
 public record MemberId(UUID uuid) implements Tag {
     @Override
     public String toTag() {
-        return null;
+        return "member:" + uuid;
     }
 }
