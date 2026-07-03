@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -65,7 +67,9 @@ class EventStoreTest {
                 new QueryPredicate(GameCreated.class));
 
         assertThat(events)
-                .hasSize(2);
+                .hasSize(2)
+                .extracting(StoredEvent::payload)
+                .hasOnlyElementsOfType(GameCreated.class);
     }
 
     @Test
@@ -73,13 +77,16 @@ class EventStoreTest {
         EventStore eventStore = new InMemoryEventStore();
         eventStore.append(EventFactory.gameCreatedWithTitle("first"));
         eventStore.append(EventFactory.gameCreatedWithTitle("second"));
+        eventStore.append(new PlayerJoined(new MemberId(UUID.randomUUID()), new PlayerId(UUID.randomUUID()), "gameHandle"));
         eventStore.append(EventFactory.memberRegistered("blue"));
 
         List<StoredEvent> events = eventStore.query(
-                new QueryPredicate(GameCreated.class));
+                new QueryPredicate(Set.of(GameCreated.class, PlayerJoined.class)));
 
         assertThat(events)
-                .hasSize(2);
+                .hasSize(3)
+                .extracting(StoredEvent::payload)
+                .hasOnlyElementsOfTypes(GameCreated.class, PlayerJoined.class);
     }
 
     @Test

@@ -11,4 +11,8 @@ public record QueryPredicate(Set<Class<? extends Event>> eventTypes,
     public QueryPredicate(Class<? extends Event> eventType) {
         this(Set.of(eventType), Set.of());
     }
+
+    public QueryPredicate(Set<Class<? extends Event>> eventTypes) {
+        this(eventTypes, Set.of());
+    }
 }
