@@ -39,6 +39,7 @@ class CreateGameControllerTest {
 
         assertThat(createGameCommand.executionEvents())
                 .as("Expected execution of CreateGameCommand to generate a GameCreated event")
+                .extracting(StoredEvent::payload)
                 .containsExactly(
                         new GameCreated(
                                 null,

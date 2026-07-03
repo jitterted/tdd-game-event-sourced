@@ -20,7 +20,7 @@ public class CreateGameCommand {
         return Result.success(event);
     }
 
-    public List<Event> executionEvents() {
+    public List<StoredEvent> executionEvents() {
         return eventStore.loadEvents();
     }
 }

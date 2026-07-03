@@ -1,36 +1,48 @@
 package dev.ted.tddgame;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class InMemoryEventStore implements EventStore {
-    private final List<Event> events = new ArrayList<>();
+    private final List<StoredEvent> storedEvents = new ArrayList<>();
     private final List<EventConsumer> subscribers = new ArrayList<>();
 
     @Override
-    public Event append(Event event) {
-        events.add(event);
-        long nextEventSequence = events.size();
-
-        GameCreated gameCreated = (GameCreated) event;
-        GameCreated eventWithSequence = new GameCreated(
-                nextEventSequence, gameCreated.gameHandle(), gameCreated.title(),
-                gameCreated.creator());
-
-        subscribers.forEach(
-                subscriber -> subscriber.apply(eventWithSequence)
+    public StoredEvent append(Event event) {
+        // event sequence starts with 1, so +1 existing size
+        long nextEventSequence = storedEvents.size() + 1;
+        StoredEvent storedEvent = new StoredEvent(
+                nextEventSequence,
+                event.getClass(),
+                UUID.randomUUID(),
+                Instant.now(),
+                event,
+                null // commandId
         );
 
-        return eventWithSequence;
+        storedEvents.add(storedEvent);
+
+        subscribers.forEach(
+                subscriber -> subscriber.apply(storedEvent)
+        );
+
+        return storedEvent;
     }
 
     @Override
-    public List<Event> loadEvents() {
-        return List.copyOf(events);
+    public List<StoredEvent> loadEvents() {
+        return List.copyOf(storedEvents);
     }
 
     @Override
     public void subscribe(EventConsumer eventConsumer) {
         this.subscribers.add(eventConsumer);
+    }
+
+    @Override
+    public List<Event> query(QueryPredicate queryPredicate) {
+        return null;
     }
 }

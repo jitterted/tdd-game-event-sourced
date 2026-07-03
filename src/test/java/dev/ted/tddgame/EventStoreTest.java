@@ -1,9 +1,11 @@
 package dev.ted.tddgame;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -13,26 +15,29 @@ class EventStoreTest {
     void eventAssignedEventSequenceStartingWith1WhenAppendedAndReturned() {
         EventStore eventStore = new InMemoryEventStore();
 
-        Event eventWithSequence = eventStore.append(EventFactory.createEvent());
+        StoredEvent eventWithSequence = eventStore.append(EventFactory.createEvent());
 
-        assertThat(eventWithSequence.eventSequence())
+        assertThat(eventWithSequence.sequence())
                 .isEqualTo(1L);
     }
 
     @Test
     void twoEventsAppendedGetSequenceNumbersInOrderOfAppending() {
         EventStore eventStore = new InMemoryEventStore();
-        Event firstEvent = EventFactory.createEventWithTitle("first");
-        Event secondEvent = EventFactory.createEventWithTitle("second");
-        List<GameCreated> eventsWithSequence = new ArrayList<>();
+        Event firstEvent = EventFactory.gameCreatedWithTitle("first");
+        Event secondEvent = EventFactory.gameCreatedWithTitle("second");
+        List<StoredEvent> eventsWithSequence = new ArrayList<>();
 
-        eventsWithSequence.add((GameCreated) eventStore.append(firstEvent));
-        eventsWithSequence.add((GameCreated) eventStore.append(secondEvent));
+        eventsWithSequence.add(eventStore.append(firstEvent));
+        eventsWithSequence.add(eventStore.append(secondEvent));
 
         assertThat(eventsWithSequence)
-                .extracting(Event::eventSequence, GameCreated::title)
-                .containsExactly(tuple(1L, "first"),
-                                 tuple(2L, "second"));
+                .extracting(StoredEvent::sequence)
+                .containsExactly(1L, 2L);
+        assertThat(eventsWithSequence)
+                .map(StoredEvent::payload)
+                .extracting(event -> ((GameCreated) event).title())
+                .containsExactly("first", "second");
     }
 
     @Test
@@ -45,22 +50,42 @@ class EventStoreTest {
 
         assertThat(subscriber.eventsApplied())
                 .hasSize(1)
-                .extracting(Event::eventSequence)
+                .extracting(StoredEvent::sequence)
                 .first()
                 .isNotNull();
     }
 
+    @Test
+    @Disabled("until we finish migrating to StoredEvent")
+    void queryReturnsMatchingEvents() {
+        EventStore eventStore = new InMemoryEventStore();
+        eventStore.append(new MemberRegistered(
+                new Username("my_username"),
+                new MemberId(UUID.randomUUID())));
+        MemberRegistered blueMemberRegistered = new MemberRegistered(
+                new Username("blue"),
+                new MemberId(UUID.randomUUID()));
+        eventStore.append(blueMemberRegistered);
+
+        QueryPredicate memberQueryPredicate =
+                new QueryPredicate(MemberRegistered.class,
+                                   new Username("blue"));
+        List<Event> events = eventStore.query(memberQueryPredicate);
+
+        assertThat(events)
+                .containsExactly(blueMemberRegistered);
+    }
 }
 
 class AppliedEventsConsumer implements EventConsumer {
-    private final List<Event> eventsApplied = new ArrayList<>();
+    private final List<StoredEvent> eventsApplied = new ArrayList<>();
 
-    public List<Event> eventsApplied() {
+    public List<StoredEvent> eventsApplied() {
         return eventsApplied;
     }
 
     @Override
-    public void apply(Event event) {
+    public void apply(StoredEvent event) {
         eventsApplied.add(event);
     }
 }

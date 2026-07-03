@@ -35,7 +35,8 @@ class LobbyTest {
             GameCreated gameCreated = new GameCreated(
                     1L, "sun-dog-20", "Title of Game", "Creator");
 
-            projector.apply(gameCreated);
+            StoredEvent storedEvent = EventFactory.toStoredEvent(gameCreated);
+            projector.apply(storedEvent);
 
             GamesAvailableToJoin expected = new GamesAvailableToJoin();
             expected.add(new GamesAvailableToJoin.AvailableGame(
@@ -45,4 +46,5 @@ class LobbyTest {
                     .isEqualTo(expected);
         }
     }
+
 }

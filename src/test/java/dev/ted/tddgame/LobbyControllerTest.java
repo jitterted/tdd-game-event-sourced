@@ -16,7 +16,8 @@ class LobbyControllerTest {
     @Test
     void showLobbyPopulatesModelWithAvailableGames() {
         GamesAvailableToJoinProjector projector = new GamesAvailableToJoinProjector();
-        projector.apply(EventFactory.createEventWithTitle("First Game Title"));
+        GameCreated gameCreated = EventFactory.gameCreatedWithTitle("First Game Title");
+        projector.apply(EventFactory.toStoredEvent(gameCreated));
         LobbyController lobbyController = new LobbyController(projector);
 
         Model model = new ConcurrentModel();
