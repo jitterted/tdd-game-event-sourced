@@ -42,7 +42,10 @@ public class InMemoryEventStore implements EventStore {
     }
 
     @Override
-    public List<Event> query(QueryPredicate queryPredicate) {
-        return null;
+    public List<StoredEvent> query(QueryPredicate queryPredicate) {
+        Class<? extends Event> desiredEventType = queryPredicate.eventTypes().iterator().next();
+        return storedEvents.stream()
+                           .filter(storedEvent -> storedEvent.type().equals(desiredEventType))
+                           .toList();
     }
 }

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @NullMarked
 public class EventFactory {
-    public static GameCreated createEvent() {
+    public static GameCreated gameCreated() {
         return gameCreatedWithTitle("title");
     }
 
@@ -23,5 +23,11 @@ public class EventFactory {
                                Instant.now(),
                                event,
                                null);
+    }
+
+    public static @NonNull MemberRegistered memberRegistered(String blue) {
+        return new MemberRegistered(
+                new Username(blue),
+                new MemberId(UUID.randomUUID()));
     }
 }

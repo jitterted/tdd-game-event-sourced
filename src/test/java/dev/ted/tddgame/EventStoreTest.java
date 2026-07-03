@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -15,7 +14,7 @@ class EventStoreTest {
     void eventAssignedEventSequenceStartingWith1WhenAppendedAndReturned() {
         EventStore eventStore = new InMemoryEventStore();
 
-        StoredEvent eventWithSequence = eventStore.append(EventFactory.createEvent());
+        StoredEvent eventWithSequence = eventStore.append(EventFactory.gameCreated());
 
         assertThat(eventWithSequence.sequence())
                 .isEqualTo(1L);
@@ -46,7 +45,7 @@ class EventStoreTest {
         AppliedEventsConsumer subscriber = new AppliedEventsConsumer();
         eventStore.subscribe(subscriber);
 
-        eventStore.append(EventFactory.createEvent());
+        eventStore.append(EventFactory.gameCreated());
 
         assertThat(subscriber.eventsApplied())
                 .hasSize(1)
@@ -56,23 +55,39 @@ class EventStoreTest {
     }
 
     @Test
-    @Disabled("until we finish migrating to StoredEvent")
-    void queryReturnsMatchingEvents() {
+    void queryReturnsAllEventsMatchingSingleEventType() {
         EventStore eventStore = new InMemoryEventStore();
-        eventStore.append(new MemberRegistered(
-                new Username("my_username"),
-                new MemberId(UUID.randomUUID())));
-        MemberRegistered blueMemberRegistered = new MemberRegistered(
-                new Username("blue"),
-                new MemberId(UUID.randomUUID()));
+        eventStore.append(EventFactory.gameCreatedWithTitle("first"));
+        eventStore.append(EventFactory.gameCreatedWithTitle("second"));
+        eventStore.append(EventFactory.memberRegistered("blue"));
+
+        List<StoredEvent> events = eventStore.query(
+                new QueryPredicate(GameCreated.class));
+
+        assertThat(events)
+                .hasSize(2);
+    }
+
+    @Test
+    void queryReturnsAllEventsMatchingMultipleEventTypes() {
+
+    }
+
+    @Test
+    @Disabled("until query for just matching event type works")
+    void queryReturnsEventsMatchingSingleEventTypeAndSpecificTag() {
+        EventStore eventStore = new InMemoryEventStore();
+        eventStore.append(EventFactory.memberRegistered("my_username"));
+        MemberRegistered blueMemberRegistered = EventFactory.memberRegistered("blue");
         eventStore.append(blueMemberRegistered);
 
         QueryPredicate memberQueryPredicate =
                 new QueryPredicate(MemberRegistered.class,
                                    new Username("blue"));
-        List<Event> events = eventStore.query(memberQueryPredicate);
+        List<StoredEvent> events = eventStore.query(memberQueryPredicate);
 
         assertThat(events)
+                .extracting(StoredEvent::payload)
                 .containsExactly(blueMemberRegistered);
     }
 }
