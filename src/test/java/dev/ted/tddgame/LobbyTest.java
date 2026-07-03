@@ -22,7 +22,8 @@ class LobbyTest {
                     .isTrue();
             assertThat(event.value())
                     .isEqualTo(new GameCreated(
-                            "game-handle", "Title of Game", "Creator"));
+                            new GameHandle("game-handle"),
+                            "Title of Game", "Creator"));
         }
     }
 
@@ -33,7 +34,7 @@ class LobbyTest {
         void gameCreated_AddsGame_GamesAvailableToJoin() {
             GamesAvailableToJoinProjector projector = new GamesAvailableToJoinProjector();
             GameCreated gameCreated = new GameCreated(
-                    "sun-dog-20", "Title of Game", "Creator");
+                    new GameHandle("sun-dog-20"), "Title of Game", "Creator");
 
             StoredEvent storedEvent = EventFactory.toStoredEvent(gameCreated);
             projector.apply(storedEvent);

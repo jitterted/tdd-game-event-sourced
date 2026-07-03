@@ -12,7 +12,8 @@ class GamesAvailableToJoinProjectorTest {
         GamesAvailableToJoinProjector projector = new GamesAvailableToJoinProjector();
         eventStore.subscribe(projector);
 
-        eventStore.append(new GameCreated("tdd-game-90", "title of game", "creator"));
+        eventStore.append(new GameCreated(new GameHandle("tdd-game-90")
+                , "title of game", "creator"));
 
         assertThat(projector.projection().games())
                 .containsExactly(

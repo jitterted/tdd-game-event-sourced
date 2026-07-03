@@ -31,4 +31,12 @@ class TagTest {
         assertThat(username.toTag())
                 .isEqualTo("username:" + username.username());
     }
+
+    @Test
+    void gameHandleUsesGameHandlePrefixForTag() {
+        GameHandle gameHandle = new GameHandle("my_game_handle");
+
+        assertThat(gameHandle.toTag())
+                .isEqualTo("gamehandle:" + gameHandle.gameHandle());
+    }
 }

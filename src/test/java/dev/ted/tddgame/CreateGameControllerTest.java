@@ -42,7 +42,7 @@ class CreateGameControllerTest {
                 .extracting(StoredEvent::payload)
                 .containsExactly(
                         new GameCreated(
-                                "funny-ant-60", "The Olive Game 🫒",
+                                new GameHandle("funny-ant-60"), "The Olive Game 🫒",
                                 "principal_name"));
     }
 

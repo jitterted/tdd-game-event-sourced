@@ -1,6 +1,7 @@
 package dev.ted.tddgame;
 
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 public record StoredEvent(
@@ -8,6 +9,7 @@ public record StoredEvent(
         Class<? extends Event> type,
         UUID eventId,
         Instant timestamp,
+        Set<String> tags,
         Event payload,
         UUID commandId
 ) {

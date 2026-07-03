@@ -8,15 +8,15 @@ class ResultTest {
 
     @Test
     void successIsSuccessful() {
-        Result<Event, String> successfulEvent = Result.success(
-                new GameCreated("irrelevant", "irrelevant", "irrelevant"));
+        GameCreated gameCreated = EventFactory.gameCreated();
+        Result<Event, String> successfulEvent = Result.success(gameCreated);
 
         assertThat(successfulEvent.isSuccess())
                 .isTrue();
         assertThat(successfulEvent.isFailure())
                 .isFalse();
         assertThat(successfulEvent.value())
-                .isEqualTo(new GameCreated("irrelevant", "irrelevant", "irrelevant"));
+                .isEqualTo(gameCreated);
         assertThat(successfulEvent.failureInfo())
                 .isNull();
     }

@@ -11,7 +11,7 @@ public class GamesAvailableToJoinProjector implements EventConsumer {
     public void apply(StoredEvent event) {
         if (event.payload() instanceof GameCreated gameCreated) {
             gamesAvailableToJoin.add(new GamesAvailableToJoin
-                    .AvailableGame(gameCreated.gameHandle(),
+                    .AvailableGame(gameCreated.gameHandle().gameHandle(),
                                    gameCreated.title()));
         }
     }

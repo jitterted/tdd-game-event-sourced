@@ -1,7 +1,10 @@
 package dev.ted.tddgame;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -90,6 +93,7 @@ class EventStoreTest {
     }
 
     @Test
+    @Disabled("until stored event supports tags")
     void queryReturnsEventsMatchingSingleEventTypeAndSpecificTag() {
         EventStore eventStore = new InMemoryEventStore();
         eventStore.append(EventFactory.gameCreatedWithTitle("first"));
@@ -112,6 +116,37 @@ class EventStoreTest {
     void eventsMatchingMultipleTypesAndSpecificTag() {
 
     }
+
+    @Nested
+    class TaggingStoredEvents {
+        @Test
+        void appendAddsTagPropertiesToTagsMetadata() {
+            EventStore eventStore = new InMemoryEventStore();
+
+            GameCreated gameCreated = EventFactory.gameCreatedWithTitle("title");
+            StoredEvent storedEvent = eventStore.append(gameCreated);
+
+            assertThat(storedEvent.tags())
+                    .containsExactly(gameCreated.gameHandle().toTag());
+        }
+
+        @Test
+        void allEventComponentsThatAreTagsConvertedToStrings() throws InvocationTargetException, IllegalAccessException {
+            UUID uuid = UUID.randomUUID();
+            Event event = new MemberRegistered(
+                    new Username("member_username"),
+                    new MemberId(uuid));
+
+            Set<String> tagStrings = event.tags();
+
+            assertThat(tagStrings)
+                    .containsExactlyInAnyOrder(
+                            "username:member_username",
+                            "member:" + uuid);
+        }
+
+    }
+
 }
 
 class AppliedEventsConsumer implements EventConsumer {

@@ -3,6 +3,7 @@ package dev.ted.tddgame;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class InMemoryEventStore implements EventStore {
@@ -13,11 +14,13 @@ public class InMemoryEventStore implements EventStore {
     public StoredEvent append(Event event) {
         // event sequence starts with 1, so +1 existing size
         long nextEventSequence = storedEvents.size() + 1;
+        Set<String> tags = event.tags();
         StoredEvent storedEvent = new StoredEvent(
                 nextEventSequence,
                 event.getClass(),
                 UUID.randomUUID(),
                 Instant.now(),
+                tags,
                 event,
                 null // commandId
         );
