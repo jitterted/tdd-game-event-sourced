@@ -34,8 +34,8 @@ public class LobbyControllerMvcTest {
         mvc.get()
            .uri("/lobby")
            .assertThat()
-           .hasStatus2xxSuccessful()
-           .hasViewName("lobby");
+           .as("Redirects to registration because Mock User is not registered as a member")
+           .hasStatus3xxRedirection();
     }
 
     @Test

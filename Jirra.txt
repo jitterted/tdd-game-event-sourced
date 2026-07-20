@@ -1,6 +1,16 @@
 Next up:
 ========
 
+Member Registration
+-------------------
+[ ] After login we redirect to Lobby: /lobby needs to ensure you're registered as a Member, and if not, redirects to /register
+[ ] /register does RegisterMemberCommand, which (if success) results in MemberRegistered
+    [ ] Redirect to /lobby
+
+
+Joining Game
+------------
+
 [ ] Create JoinGame command executed from the LobbyController.joinGame()
 [ ] Will need a member ID mapped from Principal.name for player joined event
 [ ] Redirect from joinGame to /game needs to have a game handle query param
