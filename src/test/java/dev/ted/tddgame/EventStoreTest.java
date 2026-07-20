@@ -116,23 +116,41 @@ class EventStoreTest {
         String gameHandle = "single-game-handle";
         GameCreated gameCreated = EventFactory.gameCreatedWithHandle(gameHandle);
         eventStore.append(gameCreated);
+        eventStore.append(EventFactory.gameCreated());
         eventStore.append(EventFactory.memberRegistered());
         PlayerJoined playerJoined = EventFactory.playerJoined(gameHandle);
         eventStore.append(playerJoined);
 
-        QueryPredicate memberQueryPredicate =
+        QueryPredicate queryPredicate =
                 new QueryPredicate(Set.of(GameCreated.class, PlayerJoined.class),
                                    new GameHandle(gameHandle));
-        List<StoredEvent> events = eventStore.query(memberQueryPredicate);
+        List<StoredEvent> events = eventStore.query(queryPredicate);
 
         assertThat(events)
                 .extracting(StoredEvent::payload)
                 .containsExactlyInAnyOrder(gameCreated, playerJoined);
     }
 
-
+    @Test
     void eventsMatchingSingleEventTypeAndMultipleTags() {
+        EventStore eventStore = new InMemoryEventStore();
+        String gameHandle = "game-handle-to-join";
+        eventStore.append(EventFactory.gameCreatedWithHandle(gameHandle));
+        PlayerJoined findThisPlayerJoined = EventFactory.playerJoined(gameHandle);
+        eventStore.append(findThisPlayerJoined);
+        PlayerJoined doNotFindThisPlayerJoined = EventFactory.playerJoined(gameHandle);
+        eventStore.append(doNotFindThisPlayerJoined);
 
+        QueryPredicate queryPredicate =
+                new QueryPredicate(PlayerJoined.class,
+                                   Set.of(
+                                   findThisPlayerJoined.gameHandle(),
+                                   findThisPlayerJoined.memberId()));
+        List<StoredEvent> events = eventStore.query(queryPredicate);
+
+        assertThat(events)
+                .extracting(StoredEvent::payload)
+                .containsExactly(findThisPlayerJoined);
     }
 
     // Needs multiple different event types that share 2 (or more) Tag types

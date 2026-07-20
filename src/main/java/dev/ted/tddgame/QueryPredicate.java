@@ -19,4 +19,8 @@ public record QueryPredicate(Set<Class<? extends Event>> eventTypes,
     public QueryPredicate(Set<Class<? extends Event>> eventTypes, Tag tag) {
         this(eventTypes, Set.of(tag));
     }
+
+    public QueryPredicate(Class<? extends Event> eventType, Set<Tag> tags) {
+        this(Set.of(eventType), tags);
+    }
 }
