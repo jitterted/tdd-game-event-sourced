@@ -19,7 +19,7 @@ public interface Event {
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new RuntimeException("Invocation of record component accessor failed", e);
                     }
-                    tagStrings.add(tag.toTag());
+                    tagStrings.add(tag.asString());
                 }
             }
         }

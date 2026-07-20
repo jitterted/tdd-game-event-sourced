@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public record PlayerId(UUID uuid) implements Tag {
     @Override
-    public String toTag() {
+    public String asString() {
         return "player:" + uuid;
     }
 }

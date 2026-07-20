@@ -1,6 +1,5 @@
 package dev.ted.tddgame;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -79,7 +78,7 @@ class EventStoreTest {
         EventStore eventStore = new InMemoryEventStore();
         eventStore.append(EventFactory.gameCreatedWithTitle("first"));
         eventStore.append(EventFactory.gameCreatedWithTitle("second"));
-        eventStore.append(new PlayerJoined(new MemberId(UUID.randomUUID()), new PlayerId(UUID.randomUUID()), "gameHandle"));
+        eventStore.append(EventFactory.playerJoined());
         eventStore.append(EventFactory.memberRegistered("blue"));
 
         List<StoredEvent> events = eventStore.query(
@@ -93,8 +92,7 @@ class EventStoreTest {
     }
 
     @Test
-    @Disabled("until stored event supports tags")
-    void queryReturnsEventsMatchingSingleEventTypeAndSpecificTag() {
+    void queryReturnsEventsMatchingSingleEventTypeAndSingleTag() {
         EventStore eventStore = new InMemoryEventStore();
         eventStore.append(EventFactory.gameCreatedWithTitle("first"));
         eventStore.append(EventFactory.memberRegistered("my_username"));
@@ -113,7 +111,33 @@ class EventStoreTest {
     }
 
     @Test
-    void eventsMatchingMultipleTypesAndSpecificTag() {
+    void eventsMatchingMultipleTypesAndSingleTag() {
+        EventStore eventStore = new InMemoryEventStore();
+        String gameHandle = "single-game-handle";
+        GameCreated gameCreated = EventFactory.gameCreatedWithHandle(gameHandle);
+        eventStore.append(gameCreated);
+        eventStore.append(EventFactory.memberRegistered());
+        PlayerJoined playerJoined = EventFactory.playerJoined(gameHandle);
+        eventStore.append(playerJoined);
+
+        QueryPredicate memberQueryPredicate =
+                new QueryPredicate(Set.of(GameCreated.class, PlayerJoined.class),
+                                   new GameHandle(gameHandle));
+        List<StoredEvent> events = eventStore.query(memberQueryPredicate);
+
+        assertThat(events)
+                .extracting(StoredEvent::payload)
+                .containsExactlyInAnyOrder(gameCreated, playerJoined);
+    }
+
+
+    void eventsMatchingSingleEventTypeAndMultipleTags() {
+
+    }
+
+    // Needs multiple different event types that share 2 (or more) Tag types
+    // e.g., PlayerJoined and PlayerDiscardedCard (or some test-only event)
+    void eventsMatchingMultipleEventTypesAndMultipleTags() {
 
     }
 
@@ -127,7 +151,7 @@ class EventStoreTest {
             StoredEvent storedEvent = eventStore.append(gameCreated);
 
             assertThat(storedEvent.tags())
-                    .containsExactly(gameCreated.gameHandle().toTag());
+                    .containsExactly(gameCreated.gameHandle().asString());
         }
 
         @Test

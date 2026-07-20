@@ -12,7 +12,7 @@ class TagTest {
     void memberIdUsesMemberPrefixForTag() {
         MemberId memberId = new MemberId(UUID.randomUUID());
 
-        assertThat(memberId.toTag())
+        assertThat(memberId.asString())
                 .isEqualTo("member:" + memberId.uuid());
     }
 
@@ -20,7 +20,7 @@ class TagTest {
     void playerIdUsesPlayerPrefixForTag() {
         PlayerId playerId = new PlayerId(UUID.randomUUID());
 
-        assertThat(playerId.toTag())
+        assertThat(playerId.asString())
                 .isEqualTo("player:" + playerId.uuid());
     }
 
@@ -28,7 +28,7 @@ class TagTest {
     void usernameUsesUsernamePrefixForTag() {
         Username username = new Username("my_username");
 
-        assertThat(username.toTag())
+        assertThat(username.asString())
                 .isEqualTo("username:" + username.username());
     }
 
@@ -36,7 +36,7 @@ class TagTest {
     void gameHandleUsesGameHandlePrefixForTag() {
         GameHandle gameHandle = new GameHandle("my_game_handle");
 
-        assertThat(gameHandle.toTag())
+        assertThat(gameHandle.asString())
                 .isEqualTo("gamehandle:" + gameHandle.gameHandle());
     }
 }

@@ -13,7 +13,15 @@ public class EventFactory {
     }
 
     public static GameCreated gameCreatedWithTitle(String title) {
-        return new GameCreated(new GameHandle("gameHandle"), title, "creator");
+        return new GameCreated(new GameHandle("gameHandle"),
+                               title,
+                               "irrelevant-creator");
+    }
+
+    public static GameCreated gameCreatedWithHandle(String gameHandle) {
+        return new GameCreated(new GameHandle(gameHandle),
+                               "irrelevant-title",
+                               "irrelevant-creator");
     }
 
     public static StoredEvent toStoredEvent(Event event) {
@@ -29,5 +37,19 @@ public class EventFactory {
         return new MemberRegistered(
                 new Username(username),
                 new MemberId(UUID.randomUUID()));
+    }
+
+    public static PlayerJoined playerJoined() {
+        return playerJoined("irrelevant-game-handle");
+    }
+
+    public static PlayerJoined playerJoined(String gameHandle) {
+        return new PlayerJoined(new MemberId(UUID.randomUUID()),
+                                new PlayerId(UUID.randomUUID()),
+                                new GameHandle(gameHandle));
+    }
+
+    public static MemberRegistered memberRegistered() {
+        return memberRegistered("irrelevant-username");
     }
 }
