@@ -48,7 +48,8 @@ public class LobbyController {
     }
 
     @PostMapping("/join")
-    public String joinGame(@RequestParam("gameHandle") String gameHandle) {
+    public String joinGame(Principal principal,
+                           @RequestParam("gameHandle") String gameHandle) {
         return "redirect:/game";
     }
 }

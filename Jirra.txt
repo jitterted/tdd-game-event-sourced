@@ -1,26 +1,20 @@
 Next up:
 ========
 
-Member Registration
--------------------
-[X] After login we redirect to Lobby: /lobby needs to ensure you're registered as a Member, and if not, redirects to /register
-[ ] /register does RegisterMemberCommand, which (if success) results in MemberRegistered
-    [X] Controller GET endpoint for "/register" that returns a Form with a new MemberId
-        [X] Thymeleaf template
-    [X] Register the new member
-        [X] Controller POST for "/register"
-        [X] Execute Register Member Command with MemberId from the Form and username from Principal.getName()
-        [X] Redirect to /lobby
-    [ ] MVC-level test that does GET "/lobby"->Follow Redirect->POST "/register"->GET "/lobby" ensuring that the sequence works properly where the final GET returns the "lobby" view name
-
-
 Joining Game
 ------------
 
-[ ] Create JoinGame command executed from the LobbyController.joinGame()
-[ ] Will need a member ID mapped from Principal.name for player joined event
-[ ] Redirect from joinGame to /game needs to have a game handle query param
+[ ] Create JoinGame command
+    [ ] Reuse the Username-to->Member query in LobbyController (put it in Members.findIdFor(Username), where Members references the EventStore?)
+        [ ] Get member ID mapped from Principal.name via a Decision Query (which becomes part of the conditional append query) and generate PlayerJoined event
+    [ ] Call JoinGame from the LobbyController.joinGame()
+[ ] Redirect from joinGame to /game with the game handle as a query param
 
+
+
+DEFERRED
+========
+[ ] MVC-level test that does GET "/lobby"->Follow Redirect->POST "/register"->GET "/lobby" ensuring that the sequence works properly where the final GET returns the "lobby" view name
 
 
 Completed:
@@ -30,3 +24,14 @@ Completed:
 [X] EventStore impl has to assign event sequence numbers to events
 [X] Add game handle to projector for Slice #2 UI
 [X] JoinGameController populates template with available games
+
+Member Registration
+-------------------
+[X] After login we redirect to Lobby: /lobby needs to ensure you're registered as a Member, and if not, redirects to /register
+[X] /register does RegisterMemberCommand, which (if success) results in MemberRegistered
+    [X] Controller GET endpoint for "/register" that returns a Form with a new MemberId
+        [X] Thymeleaf template
+    [X] Register the new member
+        [X] Controller POST for "/register"
+        [X] Execute Register Member Command with MemberId from the Form and username from Principal.getName()
+        [X] Redirect to /lobby
