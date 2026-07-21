@@ -9,43 +9,34 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
+import java.util.UUID;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @Tag("mvc")
-@WebMvcTest(LobbyController.class)
+@WebMvcTest(MemberRegistrationController.class)
 @Import(TddGameConfiguration.class)
 @WithMockUser
-public class LobbyControllerMvcTest {
+public class MemberRegistrationControllerMvcTest {
 
     @Autowired
     MockMvcTester mvc;
 
     @Test
-    void getToRootRedirectsToLobby() {
+    void getToRegisterShowsRegistrationPage() {
         mvc.get()
-           .uri("/")
+           .uri("/register")
            .assertThat()
-           .hasStatus3xxRedirection()
-           .hasRedirectedUrl("/lobby");
+           .hasStatus2xxSuccessful();
     }
 
     @Test
-    void getToLobbyEndpointRedirectsForUnregisteredUser() {
-        mvc.get()
-           .uri("/lobby")
-           .assertThat()
-           .as("Redirects to registration because Mock User is not registered as a member")
-           .hasStatus3xxRedirection();
-    }
-
-    @Test
-    void postToJoinEndpointReturnsRedirectToGameWithHandle() {
+    void postToRegisterAcceptsInputAndRedirects() {
         mvc.post()
-           .param("gameHandle", "book-store-80")
+           .uri("/register")
+           .param("memberIdString", UUID.randomUUID().toString())
            .with(csrf())
-           .uri("/join")
            .assertThat()
-           .hasStatus3xxRedirection()
-           .hasRedirectedUrl("/game"); // game handle is a Query param?
+           .hasStatus3xxRedirection();
     }
 }

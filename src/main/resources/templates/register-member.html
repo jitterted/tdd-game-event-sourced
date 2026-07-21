@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register as New Member</title>
+</head>
+<body>
+<h1>Member Registration</h1>
+<h3>Welcome! You're not yet a Member, so click the button below to register as a new Member.</h3>
+<form method="POST" th:action="@{/register}" action="#" th:object="${memberRegistrationForm}">
+    <input hidden="hidden" th:field="*{memberIdString}" type="text"/>
+
+    <button type="submit">Register as Member</button>
+</form>
+</body>
+</html>
