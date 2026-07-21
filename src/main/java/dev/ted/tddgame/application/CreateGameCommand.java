@@ -28,6 +28,7 @@ public class CreateGameCommand {
         return Result.success(event);
     }
 
+    @Deprecated // should examine the event store if need to see the events
     public List<StoredEvent> executionEvents() {
         return eventStore.loadEvents();
     }
