@@ -17,6 +17,9 @@ import static org.assertj.core.api.Assertions.*;
 
 class RegisterMemberCommandTest {
 
+    private static final MemberId IRRELEVANT_MEMBER_ID = MemberId.createRandom();
+    private static final Username IRRELEVANT_USERNAME = new Username("irrelevant");
+
     @Test
     void usernameNorMemberIdAlreadyRegistered_memberRegisteredEventGenerated() {
         EventStore eventStore = new InMemoryEventStore();
@@ -38,5 +41,43 @@ class RegisterMemberCommandTest {
                         Set.of(username, memberId))))
                 .extracting(StoredEvent::payload)
                 .containsExactly(memberRegistered);
+    }
+
+    @Test
+    void usernameExists_commandFailsWithMessage() {
+        RegisterMemberCommand command = RegisterMemberCommand.createForTest();
+
+        boolean usernameExists = true;
+        boolean memberIdExists = false;
+        Result<Event, String> result = command.execute(usernameExists,
+                                                       memberIdExists,
+                                                       new Username("existing-username"),
+                                                       IRRELEVANT_MEMBER_ID);
+
+        assertThat(result.isFailure())
+                .as("Expected command to fail if username exists")
+                .isTrue();
+        assertThat(result.failureInfo())
+                .isEqualTo("Username 'existing-username' already exists");
+    }
+
+    @Test
+    void memberIdExists_commandFailsWithMessage() {
+        RegisterMemberCommand command = RegisterMemberCommand.createForTest();
+
+        boolean usernameExists = false;
+        boolean memberIdExists = true;
+        MemberId memberId = MemberId.from("d390396f-bcc3-4fed-870d-f2e9ecb45338");
+        Result<Event, String> result = command.execute(usernameExists,
+                                                       memberIdExists,
+                                                       IRRELEVANT_USERNAME,
+                                                       memberId);
+
+        assertThat(result.isFailure())
+                .as("Expected command to fail if Member ID exists")
+                .isTrue();
+        assertThat(result.failureInfo())
+                .isEqualTo("MemberID 'd390396f-bcc3-4fed-870d-f2e9ecb45338' already exists");
+
     }
 }
