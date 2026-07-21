@@ -7,9 +7,9 @@ Member Registration
 [ ] /register does RegisterMemberCommand, which (if success) results in MemberRegistered
     [X] Controller GET endpoint for "/register" that returns a Form with a new MemberId
         [X] Thymeleaf template
-    [ ] Register the new member
+    [X] Register the new member
         [X] Controller POST for "/register"
-        [ ] Execute Register Member Command with MemberId from the Form and username from Principal.getName()
+        [X] Execute Register Member Command with MemberId from the Form and username from Principal.getName()
         [X] Redirect to /lobby
     [ ] MVC-level test that does GET "/lobby"->Follow Redirect->POST "/register"->GET "/lobby" ensuring that the sequence works properly where the final GET returns the "lobby" view name
 
