@@ -1,5 +1,6 @@
 package dev.ted.tddgame.adapter.in.web;
 
+import dev.ted.tddgame.application.Members;
 import dev.ted.tddgame.application.port.EventStore;
 import dev.ted.tddgame.application.port.InMemoryEventStore;
 import dev.ted.tddgame.domain.EventFactory;
@@ -17,7 +18,7 @@ class LobbyControllerTest {
         GamesAvailableToJoinProjector projector = new GamesAvailableToJoinProjector();
         EventStore eventStore = new InMemoryEventStore();
         eventStore.append(EventFactory.memberRegistered("registered username"));
-        LobbyController lobbyController = new LobbyController(projector, eventStore);
+        LobbyController lobbyController = new LobbyController(projector, new Members(eventStore));
 
         Model model = new ConcurrentModel();
         String viewName = lobbyController.showLobby(() -> "unregistered username", model);
@@ -37,7 +38,7 @@ class LobbyControllerTest {
         eventStore.append(EventFactory.gameCreatedWithTitle("First Game Title"));
         String registeredUsername = "registered username";
         eventStore.append(EventFactory.memberRegistered(registeredUsername));
-        LobbyController lobbyController = new LobbyController(projector, eventStore);
+        LobbyController lobbyController = new LobbyController(projector, new Members(eventStore));
 
         Model model = new ConcurrentModel();
         String viewName = lobbyController.showLobby(

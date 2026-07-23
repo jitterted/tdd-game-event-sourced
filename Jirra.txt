@@ -11,6 +11,11 @@ Joining Game
 [ ] Redirect from joinGame to /game with the game handle as a query param
 
 
+CLEAN UP
+========
+
+[ ] Generate MemberId upon registration (execution of the command after the POST), instead of preloading the form with a MemberId.
+
 
 DEFERRED
 ========

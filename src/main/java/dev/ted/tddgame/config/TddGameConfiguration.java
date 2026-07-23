@@ -4,6 +4,7 @@ import com.github.kkuegler.HumanReadableIdGenerator;
 import com.github.kkuegler.PermutationBasedHumanReadableIdGenerator;
 import dev.ted.tddgame.adapter.in.web.GamesAvailableToJoinProjector;
 import dev.ted.tddgame.application.CreateGameCommand;
+import dev.ted.tddgame.application.Members;
 import dev.ted.tddgame.application.RegisterMemberCommand;
 import dev.ted.tddgame.application.port.EventStore;
 import dev.ted.tddgame.application.port.InMemoryEventStore;
@@ -26,6 +27,11 @@ public class TddGameConfiguration {
     @Bean
     RegisterMemberCommand supplyRegisterMemberCommand(EventStore eventStore) {
         return new RegisterMemberCommand(eventStore);
+    }
+
+    @Bean
+    Members members(EventStore eventStore) {
+        return new Members(eventStore);
     }
 
     @Bean
