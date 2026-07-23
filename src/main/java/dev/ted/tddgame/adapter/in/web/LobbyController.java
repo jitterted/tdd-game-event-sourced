@@ -39,6 +39,7 @@ public class LobbyController {
     @PostMapping("/join")
     public String joinGame(Principal principal,
                            @RequestParam("gameHandle") String gameHandle) {
+        // games.joinGame(members.idFor(new Username(principal.getName())), new GameHandle(gameHandle))
         return "redirect:/game";
     }
 }
