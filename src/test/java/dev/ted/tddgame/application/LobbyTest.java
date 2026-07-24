@@ -24,7 +24,7 @@ class LobbyTest {
             assertThat(event.isSuccess())
                     .as("executing CreateGameCommand should have Successful Result, but did not")
                     .isTrue();
-            assertThat(event.value())
+            assertThat(event.successValue())
                     .isEqualTo(new GameCreated(
                             new GameHandle("game-handle"),
                             "Title of Game", "Creator"));

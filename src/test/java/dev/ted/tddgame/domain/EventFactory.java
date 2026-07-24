@@ -21,7 +21,11 @@ public class EventFactory {
     }
 
     public static GameCreated gameCreatedWithHandle(String gameHandle) {
-        return new GameCreated(new GameHandle(gameHandle),
+        return gameCreatedWithHandle(new GameHandle(gameHandle));
+    }
+
+    public static GameCreated gameCreatedWithHandle(GameHandle gameHandle) {
+        return new GameCreated(gameHandle,
                                "irrelevant-title",
                                "irrelevant-creator");
     }

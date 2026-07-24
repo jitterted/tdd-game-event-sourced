@@ -5,11 +5,15 @@ Joining Game
 ------------
 
 [ ] Create JoinGame command
-    [ ] Reuse the Username-to->Member query in LobbyController (put it in Members.findIdFor(Username), where Members references the EventStore?)
-        [ ] Get member ID mapped from Principal.name via a Decision Query (which becomes part of the conditional append query) and generate PlayerJoined event
+    [ ] Just generate PlayerJoined event
+        [ ] Rule: game must have space available for a new player
+        [ ] Rule: member must not already be joined in that game
     [ ] Call JoinGame from the LobbyController.joinGame()
+    [X] Reuse the Username-to->Member query in LobbyController (put it in Members.findIdFor(Username), where Members references the EventStore?)
+        [X] Get member ID mapped from Principal.name via a Decision Query (which becomes part of the conditional append query)
 [ ] Redirect from joinGame to /game with the game handle as a query param
 
+[ ] When showing games available to Join, mark those that the member already joined so they don't try to join them again
 
 CLEAN UP
 ========

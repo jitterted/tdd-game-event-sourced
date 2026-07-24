@@ -10,7 +10,7 @@ public sealed abstract class Result<SUCCESS, FAILURE> {
         return new FailureResult<>(message);
     }
 
-    public abstract SUCCESS value();
+    public abstract SUCCESS successValue();
 
     public abstract boolean isSuccess();
 
@@ -34,7 +34,7 @@ public sealed abstract class Result<SUCCESS, FAILURE> {
         }
 
         @Override
-        public SUCCESS value() {
+        public SUCCESS successValue() {
             return value;
         }
 
@@ -57,7 +57,7 @@ public sealed abstract class Result<SUCCESS, FAILURE> {
         }
 
         @Override
-        public SUCCESS value() {
+        public SUCCESS successValue() {
             return null;
         }
 

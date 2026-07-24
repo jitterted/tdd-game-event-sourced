@@ -17,7 +17,7 @@ class ResultTest {
                 .isTrue();
         assertThat(successfulEvent.isFailure())
                 .isFalse();
-        assertThat(successfulEvent.value())
+        assertThat(successfulEvent.successValue())
                 .isEqualTo(gameCreated);
         assertThat(successfulEvent.failureInfo())
                 .isNull();
@@ -31,7 +31,7 @@ class ResultTest {
                 .isFalse();
         assertThat(failure.isFailure())
                 .isTrue();
-        assertThat(failure.value())
+        assertThat(failure.successValue())
                 .isNull();
         assertThat(failure.failureInfo())
                 .isEqualTo("Oops, failed!");

@@ -33,7 +33,7 @@ class RegisterMemberCommandTest {
                 .isTrue();
 
         MemberRegistered memberRegistered = new MemberRegistered(username, memberId);
-        assertThat(result.value())
+        assertThat(result.successValue())
                 .isEqualTo(memberRegistered);
         assertThat(eventStore.query(
                 new QueryPredicate(
